@@ -65,6 +65,12 @@ class GenProjCommandLine(object):
             help='Whether or not to generate a project in which the modules are dynamically linked.  By default all '
             'projects use static linking. This option is currently used only by the CocoaPods generator.')
         parser.add_argument(
+            '-asf',
+            '--additional_system_frameworks',
+            nargs='+',
+            default=[],
+            help='Additional system frameworks to include in the generated app.  By default UIKit and Foundation are included.')
+        parser.add_argument(
             '--print_dependency_graph',
             default=False,
             help='If true, prints out the dependency edge list and exits instead of generating an application.')
@@ -112,6 +118,7 @@ class GenProjCommandLine(object):
         gen.gen_app(app_node, node_list, graph_config.swift_lines_of_code, graph_config.objc_lines_of_code,
                     graph_config.loc_json_file_path)
 
+        print(args.additional_system_frameworks)
         fin = time.time()
         logging.info("Done in %f s", fin - start)
 
