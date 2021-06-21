@@ -180,8 +180,13 @@ class CocoaPodsProjectGenerator(object):
 
         # Make Text
         if language == Language.SWIFT:
-            file_count = (
-                max(self.swift_file_size_loc, loc_per_unit) * module_node.code_units) / self.swift_file_size_loc
+            if deps_from_index:
+                text_with_deps = self.swift_gen.gen_file(3, 3, deps_from_index).text
+                loc_with_deps = self.loc_calc.calculate_loc(text_with_deps, Language.SWIFT)
+                file_count = (loc_with_deps * module_node.code_units) / loc_with_deps
+            else:
+                file_count = (max(self.swift_file_size_loc, loc_per_unit) * module_node.code_units) / self.swift_file_size_loc
+            print("FILE COUNT {} FOR MODULE {}".format(file_count, module_node.name))
             if file_count < 1:
                 raise ValueError(
                     "Lines of code count is too small for the module {} to fit one file, increase it.".format(
